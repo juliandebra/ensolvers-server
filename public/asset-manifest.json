@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4fe9ab72.css",
+    "main.js": "/static/js/main.22150081.js",
+    "static/media/disco.gif": "/static/media/disco.e6de761665c40008eaf5.gif",
+    "static/media/books1.png": "/static/media/books1.56c43b37a254fe4e842b.png",
+    "static/media/vinil.png": "/static/media/vinil.c0a84816dfe1d9db1f22.png",
+    "static/media/cassette2.png": "/static/media/cassette2.703c0541d4ac60e323e9.png",
+    "static/media/johnnycash.png": "/static/media/johnnycash.4bdde9e61ea1529eeaaf.png",
+    "static/media/CD.png": "/static/media/CD.c675bcee9d32bfd49465.png",
+    "static/media/DVD2.png": "/static/media/DVD2.e3b99272efe4a5f441e3.png",
+    "static/media/MERCADOPAGO.png": "/static/media/MERCADOPAGO.3b6eea6e4da1e3814f98.png",
+    "static/media/johnny-cash.png": "/static/media/johnny-cash.50480d1f4c2f51aa0a53.png",
+    "static/media/JCdraw.png": "/static/media/JCdraw.f9daac36a365857cc33c.png",
+    "index.html": "/index.html",
+    "main.4fe9ab72.css.map": "/static/css/main.4fe9ab72.css.map",
+    "main.22150081.js.map": "/static/js/main.22150081.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4fe9ab72.css",
+    "static/js/main.22150081.js"
+  ]
+}
