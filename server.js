@@ -10,7 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const port = 5000;
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cors())
 app.use(express.static(path.join(__dirname + "/public")))
 
@@ -46,17 +47,6 @@ app.get('/testform', async (req, res) => {
 })
 
 
- 
-// client.connect()
-// client.query('SELECT * FROM nipt_forms')
-//     .then(response => {
-//         console.log(response.rows)
-//         client.end()
-//     })
-//     .catch(err => {
-//         client.end()
-//     })
-
 
 let cancerforms = []
 
@@ -69,39 +59,43 @@ app.get('/cancerforms', (req, res) => {
 
 app.post('/niptforms', async (req, res) => {
   try {
-    const text = 'INSERT INTO nipt_forms ("tipo_de_formulario", "desea_saber_el_sexo_fetal", "peso", "altura", "embarazo_gemelar", "si_es_mono_bicorial_no_sabe", "gemelo_reabsorbido", "tratamiento_de_fertilidad", "si_es_si_cual", "si_corresponde_edad_ovodotante", "si_corresp_edad_criopreserv", "edad_maternal_avanzada", "screening_trimestre_alterado", "anomalias_ecograficas_fetales", "voluntad_maternal", "observaciones", "semanas_gestacion", "dias_gestacion", "fecha_aprox_det_gest", "abortos_espontaneos", "abortos_previos", "motivo_repeticion", "subrrogacion_de_utero", "nombre_padre_progenitor", "nombre_madre_progenitora", "antecedentes_de_cancer", "recibio_transplante", "sexo_donante", "nro_solicitud", "id_externo", "id_anterior") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31)'
+    const {formType, fetalSex, patient, pregnancyInfo, studyInfo, sampleInfo, background, aplication, entry, termsAndCondition, dateAndHour} = req.body
+    const text = 'INSERT INTO nipt_forms ("tipo_de_formulario", "desea_saber_el_sexo_fetal", "peso", "altura", "embarazo_gemelar", "si_es_mono_bicorial_no_sabe", "gemelo_reabsorbido", "tratamiento_de_fertilidad", "si_es_si_cual", "si_corresponde_edad_ovodotante", "si_corresp_edad_criopreserv", "edad_maternal_avanzada", "screening_trimestre_alterado", "anomalias_ecograficas_fetales", "voluntad_maternal", "observaciones", "semanas_gestacion", "dias_gestacion", "fecha_aprox_det_gest", "abortos_previos", "motivo_repeticion", "subrrogacion_de_utero", "nombre_padre_progenitor", "nombre_madre_progenitora", "antecedentes_de_cancer", "recibio_transplante", "sexo_donante", "nro_solicitud", "id_externo", "id_anterior", "archivo_tipo_de_estudio", "fecha_toma_muestra", "terminos_y_condiciones", "fecha_de_envio") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34)'
     const values = [
-      req.body.formType, 
-      req.body.fetalSex, 
-      req.body.patient.weight ,
-      req.body.patient.height ,
-      req.body.pregnancyInfo.twinPregnancy ,
-      req.body.pregnancyInfo.twinPregnancyType ,
-      req.body.pregnancyInfo.twinVanishing ,
-      req.body.pregnancyInfo.fertilityTreatment,
-      req.body.pregnancyInfo.fertilityTreatmentType ,
-      req.body.pregnancyInfo.eggDonorAge ,
-      req.body.pregnancyInfo.cryopreservationAge ,
-      req.body.studyInfo.advancedMaternalAge ,
-      req.body.studyInfo.firstScreening ,
-      req.body.studyInfo.anomalies ,
-      req.body.studyInfo.maternalWill ,
-      req.body.studyInfo.observations,
-      req.body.sampleInfo.week ,
-      req.body.sampleInfo.day ,
-      req.body.sampleInfo.pregnancyDate ,
-      req.body.studyInfo.spontaneousAbortions ,
-      req.body.studyInfo.prevAbortions ,
-      req.body.sampleInfo.repetitionReason ,
-      req.body.pregnancyInfo.subrogation ,
-      req.body.pregnancyInfo.father,
-      req.body.pregnancyInfo.mother ,
-      req.body.background.cancer ,
-      req.body.background.transplant ,
-      req.body.background.transplantSex ,
-      req.body.aplication ,
-      req.body.entry ,
-      req.body.sampleInfo.prevId 
+      formType, 
+      fetalSex, 
+      patient.weight ,
+      patient.height ,
+      pregnancyInfo.twinPregnancy ,
+      pregnancyInfo.twinPregnancyType ,
+      pregnancyInfo.twinVanishing ,
+      pregnancyInfo.fertilityTreatment,
+      pregnancyInfo.fertilityTreatmentType ,
+      pregnancyInfo.eggDonorAge ,
+      pregnancyInfo.cryopreservationAge ,
+      studyInfo.advancedMaternalAge ,
+      studyInfo.firstScreening ,
+      studyInfo.anomalies ,
+      studyInfo.maternalWill ,
+      studyInfo.observations,
+      sampleInfo.week ,
+      sampleInfo.day , 
+      studyInfo.pregnancyTermination ,
+      studyInfo.prevAbortions ,
+      sampleInfo.repetitionReason ,
+      pregnancyInfo.subrogation ,
+      pregnancyInfo.father,
+      pregnancyInfo.mother ,
+      background.cancer ,
+      background.transplant ,
+      background.transplantSex ,
+      aplication ,
+      entry,
+      sampleInfo.prevId,
+      studyInfo.file,
+      sampleInfo.sampleDate ,
+      termsAndCondition,
+      dateAndHour
     ]
     await client.query(text, values)
     res.send("Form sent");
@@ -111,70 +105,48 @@ app.post('/niptforms', async (req, res) => {
   } 
 })
 
-// const test = async () => {
-//   try {
-//     const text = 'INSERT INTO nipt_forms ("tipo_de_formulario", "desea_saber_el_sexo_fetal") VALUES ($1, $2)'
-//     const values =  ['2235', true]
-//     const res = await client.query(text, values)
-//     console.log(res)
-//     res.send("Form sent");
-//   }
-//   catch(err) {
-//     console.error(err.stack);
-//   } 
-//   finally{
-//     await client.end()
-//   }
-// } 
-// test()
-// app.post('/niptforms', async (req, res) => {
-//   // console.log(req.body)
-//     niptforms = [...niptforms, req.body];
-//     const text = `INSERT INTO "nipt_forms"  
-//     ("tipo_de_formulario", "desea_saber_el_sexo_fetal", "peso", "altura", "embarazo_gemelar", "si_es_mono_bicorial_no_sabe", "gemelo_reabsorbido", "tratamiento_de_fertilidad", "si_es_si_cual", "si_corresponde_edad_ovodotante", "si_corresp_edad_criopreserv", "edad_maternal_avanzada", "screening_trimestre_alterado", "anomalias_ecograficas_fetales", "voluntad_maternal", "observaciones", "semanas_gestacion", "dias_gestacion", "fecha_aprox_det_gest", "abortos_espontaneos", "abortos_previos", "motivo_repeticion", "subrrogacion_de_utero", "nombre_padre_progenitor", "nombre_madre_progenitora", "antecedentes_de_cancer", "recibio_transplante", "sexo_donante", "nro_solicitud", "id_externo", "id_anterior")
-//     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)`
-    
-//     const values = [
-//       req.body.formType,
-//       req.body.fetalSex ,
-//       req.body.patient.weight ,
-//       req.body.patient.height ,
-//       req.body.pregnancyInfo.twinPregnancy ,
-//       req.body.pregnancyInfo.twinPregnancyType ,
-//       req.body.pregnancyInfo.twinVanishing ,
-//       req.body.pregnancyInfo.fertilityTreatment ,
-//       req.body.pregnancyInfo.fertilityTreatmentType ,
-//       req.body.pregnancyInfo.eggDonorAge ,
-//       req.body.pregnancyInfo.cryopreservationAge ,
-//       req.body.studyInfo.studyType[0] ,
-//       req.body.studyInfo.firstScreening ,
-//       req.body.studyInfo.anomalies ,
-//       req.body.studyInfo.studyType[1] ,
-//       req.body.studyInfo.observations ,
-//       req.body.sampleInfo.week ,
-//       req.body.sampleInfo.day ,
-//       req.body.sampleInfo.pregnancyDate ,
-//       req.body.studyInfo.spontaneousAbortions ,
-//       req.body.studyInfo.prevAbortions ,
-//       req.body.sampleInfo.repetitionReason ,
-//       req.body.pregnancyInfo.subrogation ,
-//       req.body.pregnancyInfo.father ,
-//       req.body.pregnancyInfo.mother ,
-//       req.body.background.cancer ,
-//       req.body.background.transplant ,
-//       req.body.background.transplantSex ,
-//       req.body.aplication ,
-//       req.body.entry ,
-//       req.body.sampleInfo.prevId ,
-//     ]
-//     await client.query(text, values)
-//     // console.log(result)
-//     // client.end()
-//     res.send("Form sent");
-// })
-app.post('/cancerforms', (req, res) => {
-  cancerforms = [...cancerforms, req.body];
-  res.send("Form sent");
+app.post('/cancerforms', async (req, res) => {
+  try{
+    const {formType, aplication, entry, studyInfo, patientEthnic, patientInfo, termsAndCondition, postTest, authorizedInfo, dateAndHour} = req.body
+    const text = 'INSERT INTO cancer_forms ("tipo_de_formulario", "nro_solicitud", "id_externo", "panel", "nueva_muestra", "id_anterior", "etnia", "antecedentes", "edad_al_diagnostico", "tratamientos_realizados", "tipo_de_cancer", "subtipo_de_cancer_de_mama", "subtipo_de_cancer_de_ovario", "polipos", "resultado_msi", "metilacion", "valor_de_metilacion", "otro_tipo_de_cancer", "si_es_si_cual", "antecedentes_familiares", "de_que_tipo_y_de_quien", "estudios_moleculares", "orden_medica", "genograma", "motivo_de_reapertura", "terminos_y_condiciones", "post_test", "informacion_autorizada", "fecha_de_envio") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)'
+    const values = [
+      formType,
+      aplication,
+      entry,
+      studyInfo.panel,
+      studyInfo.newSample,
+      studyInfo.prevId,
+      patientEthnic,
+      patientInfo.background ,
+      patientInfo.diagnosisAge ,
+      patientInfo.treatmentDone ,
+      patientInfo.cancerType ,
+      patientInfo.mamalCancerSubtype ,
+      patientInfo.ovaryCancerSubtype ,
+      patientInfo.polyps ,
+      patientInfo.MSIResult ,
+      patientInfo.metilation ,
+      patientInfo.value ,
+      patientInfo.otherCancer ,
+      patientInfo.otherCancerType,
+      patientInfo.familyBackground ,
+      patientInfo.familyBackgroundInfo,
+      patientInfo.molecularStudiesFile,
+      patientInfo.medicalOrderFile,
+      patientInfo.genogramFile,
+      patientInfo.reopeningReason,
+      termsAndCondition,
+      postTest,
+      authorizedInfo,
+      dateAndHour
+    ]
+    await client.query(text, values)
+    res.send("Form sent");
+  }
+  catch(err){
+    console.error(err.stack);
+  }
+  
 })
 
 app.all('/*', (req, res, next) => {
