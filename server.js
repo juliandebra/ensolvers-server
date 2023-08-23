@@ -4,7 +4,7 @@ import cors from 'cors';
 import path from 'path'
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv'
-import pg from 'pg';
+import sql from 'mssql'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,38 +17,83 @@ app.use(express.static(path.join(__dirname + "/public")))
 
 config()
 
-// const pool = new pg.Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   // ssl: true
-// })
 
-// const connectionData = {
-//   user: 'cibic_user',
-//   host: 'dpg-cj9thc2vvtos738sf3mg-a',
-//   database: 'cibic',
-//   password: 'QweygHONVkIqwcjy4JJCBG4F0AxI8COT',
-//   port: 5432,
-// }
+let niptforms = []
+let cancerforms = []
 
 const connectionData = {
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: 'labtory1407',
-  port: 5432,
-}
-const client = new pg.Client(connectionData)
-client.connect()
-let niptforms = []
+  server: '192.168.122.2',
+  authentication: {
+    type: 'default',
+    options: {
+      userName: 'jdebrabandere',
+      password: 'D3br4b4nd3rE*',
+    }
+  },
+  options: {
+    port: 1433,
+    database: 'CibicForms',
+    trustServerCertificate: true,
+    encrypt: false 
+  }
+};
 
 app.get('/testform', async (req, res) => {
-  const result = await client.query('SELECT * FROM nipt_forms')
-  res.send(result.rows);
+  try {
+    // Connect to the database
+    await sql.connect(connectionData);
+    // Query string
+    const queryString = 'SELECT * FROM nipt_forms'; // Replace with your actual table name
+    // Execute the query
+    const result = await sql.query(queryString);
+    // Print the result
+    console.log(result.recordset);
+    res.send(result.recordset)
+  } catch (error) {
+    // Handle errors
+    console.error('Error executing query:', error);
+  } finally {
+    // Close the connection
+    await sql.close();
+  }
 })
 
 
+// const connectionData = {
+//   user: 'jdebrabandere',
+//   host: '192.168.122.2',
+//   database: 'CibicForms',
+//   password: 'D3br4b4nd3rE*',
+//   port: 1433,
+// }
 
-let cancerforms = []
+// app.get('/testform', async (req, res) => {
+//   const result = await client.query('SELECT * FROM nipt_forms')
+//   res.send(result.rows);
+// })
+
+
+const configurateDate = (date) => {
+  const dateComponents = date.split("/"); 
+  const day = parseInt(dateComponents[0], 10);
+  const month = parseInt(dateComponents[1], 10) - 1; 
+  const year = parseInt(dateComponents[2], 10);
+
+  return new Date(year, month, day)
+}
+
+const configurateDateTime = (date, time) => {
+  const dateComponents = date.split("/"); 
+  const day = parseInt(dateComponents[0], 10);
+  const month = parseInt(dateComponents[1], 10) - 1; 
+  const year = parseInt(dateComponents[2], 10);
+
+  const timeComponents = time.split(":");
+  const hours = parseInt(timeComponents[0], 10) -3;
+  const minutes = parseInt(timeComponents[1], 10);
+
+  return new Date(year, month, day, hours, minutes)
+}
 
 app.get('/niptforms', (req, res) => {
     res.send(niptforms);
@@ -59,13 +104,19 @@ app.get('/cancerforms', (req, res) => {
 
 app.post('/niptforms', async (req, res) => {
   try {
+    await sql.connect(connectionData);
     const {formType, fetalSex, patient, pregnancyInfo, studyInfo, sampleInfo, background, aplication, entry, termsAndCondition, dateAndHour} = req.body
-    const text = 'INSERT INTO nipt_forms ("tipo_de_formulario", "desea_saber_el_sexo_fetal", "peso", "altura", "embarazo_gemelar", "si_es_mono_bicorial_no_sabe", "gemelo_reabsorbido", "tratamiento_de_fertilidad", "si_es_si_cual", "si_corresponde_edad_ovodotante", "si_corresp_edad_criopreserv", "edad_maternal_avanzada", "screening_trimestre_alterado", "anomalias_ecograficas_fetales", "voluntad_maternal", "observaciones", "semanas_gestacion", "dias_gestacion", "fecha_aprox_det_gest", "abortos_previos", "motivo_repeticion", "subrrogacion_de_utero", "nombre_padre_progenitor", "nombre_madre_progenitora", "antecedentes_de_cancer", "recibio_transplante", "sexo_donante", "nro_solicitud", "id_externo", "id_anterior", "archivo_tipo_de_estudio", "fecha_toma_muestra", "terminos_y_condiciones", "fecha_de_envio") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34)'
+    const parsedDateAndHour = dateAndHour.split(' ')
+    const dateAndHourModified = configurateDateTime(parsedDateAndHour[0], parsedDateAndHour[1])
+    const sampleDateModified = configurateDate(sampleInfo.sampleDate)
+    const pregnancyTerminationModified = configurateDate(sampleInfo.pregnancyTermination)
+
+    const text = 'INSERT INTO nipt_forms ("tipo_de_formulario", "desea_saber_sexo_fetal", "peso", "altura", "embarazo_gemelar", "si_es_mono_bicorial_no_sabe", "gemelo_reabsorbido", "tratamiento_de_fertilidad", "si_es_si_cual", "si_corresponde_edad_ovodotante", "si_corresp_edad_criopreserv", "edad_maternal_avanzada", "screening_trimestre_alterado", "anomalias_ecograficas_fetales", "voluntad_maternal", "observaciones", "semanas_gestacion", "dias_gestacion", "abortos_previos", "motivo_repeticion", "subrrogacion_de_utero", "nombre_padre_progenitor", "nombre_madre_progenitora", "antecedentes_de_cancer", "recibio_transplante", "sexo_donante", "nro_solicitud", "nro_ingreso", "id_anterior", "archivo_tipo_de_estudio", "terminos_y_condiciones", "fecha_de_envio", "fecha_toma_muestra", "fecha_aprox_det_gest") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29, @Value30, @Value31, @Value32, @Value33, @Value34)'
     const values = [
-      formType, 
+      formType.toString(), 
       fetalSex, 
-      patient.weight ,
-      patient.height ,
+      parseFloat(patient.weight) ,
+      parseInt(patient.height) ,
       pregnancyInfo.twinPregnancy ,
       pregnancyInfo.twinPregnancyType ,
       pregnancyInfo.twinVanishing ,
@@ -80,7 +131,6 @@ app.post('/niptforms', async (req, res) => {
       studyInfo.observations,
       sampleInfo.week ,
       sampleInfo.day , 
-      studyInfo.pregnancyTermination ,
       studyInfo.prevAbortions ,
       sampleInfo.repetitionReason ,
       pregnancyInfo.subrogation ,
@@ -89,26 +139,39 @@ app.post('/niptforms', async (req, res) => {
       background.cancer ,
       background.transplant ,
       background.transplantSex ,
-      aplication ,
+      aplication,
       entry,
       sampleInfo.prevId,
       studyInfo.file,
-      sampleInfo.sampleDate ,
       termsAndCondition,
-      dateAndHour
+      dateAndHourModified,
+      sampleDateModified,
+      pregnancyTerminationModified
     ]
-    await client.query(text, values)
+
+    const request = new sql.Request();
+    for (let i = 0; i < values.length; i++) {
+      request.input(`Value${i + 1}`, values[i]);
+    }
+
+    await request.query(text);
     res.send("Form sent");
   }
   catch(err) {
     console.error(err.stack);
-  } 
+  } finally {
+    await sql.close();
+  }
 })
 
 app.post('/cancerforms', async (req, res) => {
   try{
+    await sql.connect(connectionData);
     const {formType, aplication, entry, studyInfo, patientEthnic, patientInfo, termsAndCondition, postTest, authorizedInfo, dateAndHour} = req.body
-    const text = 'INSERT INTO cancer_forms ("tipo_de_formulario", "nro_solicitud", "id_externo", "panel", "nueva_muestra", "id_anterior", "etnia", "antecedentes", "edad_al_diagnostico", "tratamientos_realizados", "tipo_de_cancer", "subtipo_de_cancer_de_mama", "subtipo_de_cancer_de_ovario", "polipos", "resultado_msi", "metilacion", "valor_de_metilacion", "otro_tipo_de_cancer", "si_es_si_cual", "antecedentes_familiares", "de_que_tipo_y_de_quien", "estudios_moleculares", "orden_medica", "genograma", "motivo_de_reapertura", "terminos_y_condiciones", "post_test", "informacion_autorizada", "fecha_de_envio") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)'
+    
+    const parsedDateAndHour = dateAndHour.split(' ')
+    const dateAndHourModified = configurateDateTime(parsedDateAndHour[0], parsedDateAndHour[1])
+    const text = 'INSERT INTO cancer_forms ("tipo_de_formulario", "nro_solicitud", "id_externo", "panel", "nueva_muestra", "id_anterior", "etnia", "antecedentes", "edad_al_diagnostico", "tratamientos_realizados", "tipo_de_cancer", "subtipo_de_cancer_de_mama", "subtipo_de_cancer_de_ovario", "polipos", "resultado_msi", "metilacion", "valor_de_metilacion", "otro_tipo_de_cancer", "si_es_si_cual", "antecedentes_familiares", "de_que_tipo_y_de_quien", "estudios_moleculares", "orden_medica", "genograma", "motivo_de_reapertura", "terminos_y_condiciones", "post_test", "informacion_autorizada", "fecha_de_envio") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29)'
     const values = [
       formType,
       aplication,
@@ -138,15 +201,21 @@ app.post('/cancerforms', async (req, res) => {
       termsAndCondition,
       postTest,
       authorizedInfo,
-      dateAndHour
+      dateAndHourModified
     ]
-    await client.query(text, values)
+    const request = new sql.Request();
+    for (let i = 0; i < values.length; i++) {
+      request.input(`Value${i + 1}`, values[i]);
+    }
+
+    await request.query(text);
     res.send("Form sent");
   }
   catch(err){
     console.error(err.stack);
+  } finally {
+    await sql.close();
   }
-  
 })
 
 app.all('/*', (req, res, next) => {
@@ -156,15 +225,6 @@ app.all('/*', (req, res, next) => {
 app.listen(port);
 
 
+// console.log('pregnancyTermination',sampleInfo.pregnancyTermination)
+// console.log('sampleDate', sampleInfo.sampleDate)
 
-// api-key aea36b3d-cec6-482c-81f2-156ecb6eaf31
-// db cibic
-// user cibic_user
-// host dpg-cj9thc2vvtos738sf3mg-a
-
-
-
-// pass QweygHONVkIqwcjy4JJCBG4F0AxI8COT
-// internal db url postgres://cibic_user:QweygHONVkIqwcjy4JJCBG4F0AxI8COT@dpg-cj9thc2vvtos738sf3mg-a/cibic
-// external db url postgres://cibic_user:QweygHONVkIqwcjy4JJCBG4F0AxI8COT@dpg-cj9thc2vvtos738sf3mg-a.oregon-postgres.render.com/cibic
-// psql command PGPASSWORD=QweygHONVkIqwcjy4JJCBG4F0AxI8COT psql -h dpg-cj9thc2vvtos738sf3mg-a.oregon-postgres.render.com -U cibic_user cibic
