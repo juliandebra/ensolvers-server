@@ -74,12 +74,17 @@ app.get('/testform', async (req, res) => {
 
 
 const configurateDate = (date) => {
-  const dateComponents = date.split("/"); 
-  const day = parseInt(dateComponents[0], 10);
-  const month = parseInt(dateComponents[1], 10) - 1; 
-  const year = parseInt(dateComponents[2], 10);
-
-  return new Date(year, month, day)
+  if(date){
+    const dateComponents = date.split("/"); 
+    const day = parseInt(dateComponents[0], 10);
+    const month = parseInt(dateComponents[1], 10) - 1; 
+    const year = parseInt(dateComponents[2], 10);
+  
+    return new Date(year, month, day)
+  } 
+  else {
+    return null
+  }
 }
 
 const configurateDateTime = (date, time) => {
@@ -111,12 +116,12 @@ app.post('/niptforms', async (req, res) => {
     const sampleDateModified = configurateDate(sampleInfo.sampleDate)
     const pregnancyTerminationModified = configurateDate(sampleInfo.pregnancyTermination)
 
-    const text = 'INSERT INTO nipt_forms ("tipo_de_formulario", "desea_saber_sexo_fetal", "peso", "altura", "embarazo_gemelar", "si_es_mono_bicorial_no_sabe", "gemelo_reabsorbido", "tratamiento_de_fertilidad", "si_es_si_cual", "si_corresponde_edad_ovodotante", "si_corresp_edad_criopreserv", "edad_maternal_avanzada", "screening_trimestre_alterado", "anomalias_ecograficas_fetales", "voluntad_maternal", "observaciones", "semanas_gestacion", "dias_gestacion", "abortos_previos", "motivo_repeticion", "subrrogacion_de_utero", "nombre_padre_progenitor", "nombre_madre_progenitora", "antecedentes_de_cancer", "recibio_transplante", "sexo_donante", "nro_solicitud", "nro_ingreso", "id_anterior", "archivo_tipo_de_estudio", "terminos_y_condiciones", "fecha_de_envio", "fecha_toma_muestra", "fecha_aprox_det_gest") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29, @Value30, @Value31, @Value32, @Value33, @Value34)'
+    const text = 'INSERT INTO nipt_forms ("tipo_de_formulario", "desea_saber_el_sexo_fetal", "peso", "altura", "embarazo_gemelar", "si_es_mono_bicorial_no_sabe", "gemelo_reabsorbido", "tratamiento_de_fertilidad", "si_es_si_cual", "si_corresponde_edad_ovodotante", "si_corresp_edad_criopreserv", "edad_maternal_avanzada", "screening_trimestre_alterado", "anomalias_ecograficas_fetales", "voluntad_maternal", "observaciones", "semanas_gestacion", "dias_gestacion", "abortos_previos", "motivo_repeticion", "subrrogacion_de_utero", "nombre_padre_progenitor", "nombre_madre_progenitora", "antecedentes_de_cancer", "recibio_transplante", "sexo_donante", "nro_solicitud", "nro_ingreso", "id_anterior", "archivo_tipo_de_estudio", "terminos_y_condiciones", "fecha_de_envio", "fecha_toma_muestra", "fecha_aprox_det_gest") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29, @Value30, @Value31, @Value32, @Value33, @Value34)'
     const values = [
       formType.toString(), 
       fetalSex, 
-      parseFloat(patient.weight) ,
-      parseInt(patient.height) ,
+      patient.weight ,
+      patient.height ,
       pregnancyInfo.twinPregnancy ,
       pregnancyInfo.twinPregnancyType ,
       pregnancyInfo.twinVanishing ,
@@ -171,7 +176,7 @@ app.post('/cancerforms', async (req, res) => {
     
     const parsedDateAndHour = dateAndHour.split(' ')
     const dateAndHourModified = configurateDateTime(parsedDateAndHour[0], parsedDateAndHour[1])
-    const text = 'INSERT INTO cancer_forms ("tipo_de_formulario", "nro_solicitud", "id_externo", "panel", "nueva_muestra", "id_anterior", "etnia", "antecedentes", "edad_al_diagnostico", "tratamientos_realizados", "tipo_de_cancer", "subtipo_de_cancer_de_mama", "subtipo_de_cancer_de_ovario", "polipos", "resultado_msi", "metilacion", "valor_de_metilacion", "otro_tipo_de_cancer", "si_es_si_cual", "antecedentes_familiares", "de_que_tipo_y_de_quien", "estudios_moleculares", "orden_medica", "genograma", "motivo_de_reapertura", "terminos_y_condiciones", "post_test", "informacion_autorizada", "fecha_de_envio") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29)'
+    const text = 'INSERT INTO cancer_forms ("tipo_de_formulario", "nro_solicitud", "nro_ingreso", "panel", "nueva_muestra", "id_anterior", "etnia", "antecedentes", "edad_al_diagnostico", "tratamientos_realizados", "tipo_de_cancer", "subtipo_de_cancer_de_mama", "subtipo_de_cancer_de_ovario", "polipos", "resultado_msi", "metilacion", "valor_de_metilacion", "otro_tipo_de_cancer", "si_es_si_cual", "antecedentes_familiares", "de_que_tipo_y_de_quien", "estudios_moleculares", "orden_medica", "genograma", "motivo_de_reapertura", "terminos_y_condiciones", "post_test", "informacion_autorizada", "fecha_de_envio") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29)'
     const values = [
       formType,
       aplication,
