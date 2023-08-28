@@ -176,7 +176,7 @@ app.post('/cancerforms', async (req, res) => {
     
     const parsedDateAndHour = dateAndHour.split(' ')
     const dateAndHourModified = configurateDateTime(parsedDateAndHour[0], parsedDateAndHour[1])
-    const text = 'INSERT INTO cancer_forms ("tipo_de_formulario", "nro_solicitud", "nro_ingreso", "panel", "nueva_muestra", "id_anterior", "etnia", "antecedentes", "edad_al_diagnostico", "tratamientos_realizados", "tipo_de_cancer", "subtipo_de_cancer_de_mama", "subtipo_de_cancer_de_ovario", "polipos", "resultado_msi", "metilacion", "valor_de_metilacion", "otro_tipo_de_cancer", "si_es_si_cual", "antecedentes_familiares", "de_que_tipo_y_de_quien", "estudios_moleculares", "orden_medica", "genograma", "motivo_de_reapertura", "terminos_y_condiciones", "post_test", "informacion_autorizada", "fecha_de_envio") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29)'
+    const text = 'INSERT INTO cancer_forms ("tipo_de_formulario", "nro_solicitud", "nro_ingreso", "panel", "nueva_muestra", "id_anterior", "etnia", "antecedentes", "edad_al_diagnostico", "tratamientos_realizados", "tipo_de_cancer", "subtipo_de_cancer_de_mama", "subtipo_de_cancer_de_ovario", "polipos", "resultado_msi", "metilacion", "valor_de_metilacion", "otro_tipo_de_cancer", "si_es_si_cual", "antecedentes_familiares", "de_que_tipo_y_de_quien", "estudios_moleculares", "orden_medica", "genograma", "motivo_de_reapertura", "observaciones", "terminos_y_condiciones", "post_test", "informacion_autorizada", "fecha_de_envio") VALUES (@Value1, @Value2, @Value3, @Value4, @Value5, @Value6, @Value7, @Value8, @Value9, @Value10, @Value11, @Value12, @Value13, @Value14, @Value15, @Value16, @Value17, @Value18, @Value19, @Value20, @Value21, @Value22, @Value23, @Value24, @Value25, @Value26, @Value27, @Value28, @Value29, @Value30)'
     const values = [
       formType,
       aplication,
@@ -203,6 +203,7 @@ app.post('/cancerforms', async (req, res) => {
       patientInfo.medicalOrderFile,
       patientInfo.genogramFile,
       patientInfo.reopeningReason,
+      patientInfo.observations,
       termsAndCondition,
       postTest,
       authorizedInfo,
