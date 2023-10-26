@@ -1,0 +1,62 @@
+2023-08-29T14:55:44.542Z - info: Initializing jsreport (version: 3.13.0, configuration file: none, nodejs: 18.12.0)
+2023-08-29T14:55:44.546Z - info: Searching for available extensions in D:\Carpeta central\programacion\CIBIC\cibic-form\server\
+2023-08-29T14:55:44.548Z - info: Extensions location cache not found, crawling directories
+2023-08-29T14:55:51.890Z - info: Found 35 extension(s)
+2023-08-29T14:55:51.947Z - debug: Writing extension locations cache to C:\Users\Usuario\AppData\Local\Temp\jsreport\core\locations.json
+2023-08-29T14:55:51.950Z - debug: Discovered 35 extensions
+2023-08-29T14:55:52.018Z - info: Using extension authentication@3.4.0
+2023-08-29T14:55:52.431Z - debug: Extension authentication@3.4.0 was disabled
+2023-08-29T14:55:52.433Z - info: Using extension base@3.0.1
+2023-08-29T14:55:52.437Z - info: Using extension child-templates@3.1.0
+2023-08-29T14:55:52.440Z - info: Using extension cli@3.2.3
+2023-08-29T14:55:52.444Z - info: Using extension components@3.3.1
+2023-08-29T14:55:52.448Z - info: Using extension data@3.1.0
+2023-08-29T14:55:52.450Z - info: Using extension express@3.7.1
+2023-08-29T14:55:53.003Z - info: Using extension freeze@3.0.1
+2023-08-29T14:55:53.006Z - info: Using extension fs-store@3.2.5
+2023-08-29T14:55:53.478Z - debug: Extension fs-store@3.2.5 was disabled
+2023-08-29T14:55:53.479Z - info: Using extension handlebars@3.2.1
+2023-08-29T14:55:53.481Z - info: Using extension import-export@3.2.0
+2023-08-29T14:55:53.509Z - info: Using extension jsrender@3.0.0
+2023-08-29T14:55:53.511Z - info: Using extension licensing@3.0.3
+2023-08-29T14:55:53.571Z - info: Using extension localization@3.2.2
+2023-08-29T14:55:53.574Z - info: Using extension npm@3.2.0
+2023-08-29T14:55:53.578Z - info: Using extension pdf-utils@3.9.0
+2023-08-29T14:55:53.581Z - info: Using extension reports@3.1.1
+2023-08-29T14:55:53.585Z - info: Using extension tags@3.1.1
+2023-08-29T14:55:53.590Z - info: Using extension text@3.0.0
+2023-08-29T14:55:53.594Z - info: Using extension version-control@3.1.2
+2023-08-29T14:55:53.623Z - info: Using extension assets@3.6.1
+2023-08-29T14:55:53.659Z - info: Using extension authorization@3.3.0
+2023-08-29T14:55:53.665Z - debug: Extension authorization@3.3.0 was disabled
+2023-08-29T14:55:53.666Z - info: Using extension browser-client@3.1.2
+2023-08-29T14:55:53.671Z - info: Using extension chrome-pdf@3.4.0
+2023-08-29T14:55:53.676Z - debug: Chrome strategy is chrome-pool, numberOfWorkers: 1
+2023-08-29T14:55:53.678Z - info: Using extension docx@3.7.2
+2023-08-29T14:55:53.683Z - info: Using extension html-to-xlsx@3.3.2
+2023-08-29T14:55:54.321Z - info: html-to-xlsx detected chrome as available html engine
+2023-08-29T14:55:54.321Z - info: Using extension pptx@3.4.0
+2023-08-29T14:55:54.325Z - info: Using extension scheduling@3.0.3
+2023-08-29T14:55:54.367Z - info: Using extension scripts@3.4.1
+2023-08-29T14:55:54.369Z - info: Using extension static-pdf@3.0.1
+2023-08-29T14:55:54.372Z - info: Using extension studio@3.9.3
+2023-08-29T14:55:54.761Z - info: Using extension xlsx@3.5.0
+2023-08-29T14:55:54.814Z - info: Using extension public-templates@3.0.0
+2023-08-29T14:55:54.817Z - debug: Extension public-templates@3.0.0 was disabled
+2023-08-29T14:55:54.817Z - info: Using extension sample-template@3.2.1
+2023-08-29T14:55:54.822Z - info: Using extension studio-theme-dark@3.0.1
+2023-08-29T14:55:54.825Z - info: Using general timeout for rendering (reportTimeout: 60000)
+2023-08-29T14:55:54.826Z - info: Using memory provider for template store. The saved templates will be lost after restart
+2023-08-29T14:55:54.850Z - debug: studio default theme is: light
+2023-08-29T14:55:54.867Z - info: Creating default express app.
+2023-08-29T14:55:54.896Z - info: jsreport server successfully started on http port: 5488
+2023-08-29T14:55:54.917Z - info: Verifying license key free
+2023-08-29T14:55:54.931Z - info: Using free license
+2023-08-29T14:55:54.941Z - info: Migrating templates chrome settings (waitForNetworkIddle -> waitForNetworkIdle)
+2023-08-29T14:55:54.943Z - info: Migration successful
+2023-08-29T14:55:54.944Z - debug: Creating samples is disabled
+2023-08-29T14:55:54.948Z - info: Initializing worker threads
+2023-08-29T14:55:54.949Z - debug: Extensions in workers: base, child-templates, components, data, express, handlebars, jsrender, localization, npm, pdf-utils, reports, text, version-control, assets, browser-client, chrome-pdf, docx, html-to-xlsx, pptx, scripts, static-pdf, studio, xlsx
+2023-08-29T14:55:55.438Z - info: 2 worker threads initialized in 490ms
+2023-08-29T14:55:55.439Z - info: Starting temp files cleanup with 180000ms threshold
+2023-08-29T14:55:55.440Z - info: reporter initialized
