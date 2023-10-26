@@ -7,7 +7,6 @@ const sql = require('mssql');
 const { default: axios } = require('axios');
 const fs = require('fs')
 const app = express();
-const port = 5000;
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
@@ -229,5 +228,5 @@ app.all('/*', (req, res, next) => {
     res.send('That route does not exist!');
 });
 
-app.listen(port);
+app.listen(process.env.PORT);
 //En IIS, reemplazar por app.listen(process.env.PORT); 
