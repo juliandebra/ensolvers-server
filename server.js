@@ -14,17 +14,17 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '/public')));
 
 const connectionData = {
-  server: '192.168.122.2',
+  server: process.env.DB_HOST,
   authentication: {
     type: 'default',
     options: {
-      userName: 'jdebrabandere',
-      password: 'D3br4b4nd3rE*',
+      userName: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
     }
   },
   options: {
     port: 1433,
-    database: 'CibicForms',
+    database: process.env.DATABASE,
     trustServerCertificate: true,
     encrypt: false 
   }
