@@ -10,7 +10,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use(cors())
 app.use(express.static(path.join(__dirname, '/public')))
 const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
 })
 
 const notesRouter = require('./routes/notes')
